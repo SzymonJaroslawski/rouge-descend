@@ -51,15 +51,15 @@ func _procces_room_queue(room_queue: Array[Dictionary]) -> void:
 		var cummulative_prob: Array[float] = []
 		var sum: float = 0.0
 
-		for prob in adjacency_chance[parent_id]:
+		for prob: float in adjacency_chance[parent_id]:
 			sum += prob
 			cummulative_prob.append(sum)
 		
-		var rng = randf() * sum
+		var rng := randf() * sum
 		
 		var new_room_id: String
 		
-		var i = 0
+		var i := 0
 		
 		for v in cummulative_prob:
 			if rng <= v:
@@ -98,15 +98,15 @@ func _try_placing_room(current_room: Room, current_point: Marker3D, new_room_id:
 	new_room.queue_free()
 	return false
 
-func _aligin_room(parent_room: Room ,parent_point: Marker3D, new_room: Room, new_point: Marker3D):
+func _aligin_room(parent_room: Room ,parent_point: Marker3D, new_room: Room, new_point: Marker3D) -> void:
 	var parent_global_pos := parent_room.to_global(parent_point.position)
 	var parent_forward := -parent_point.global_transform.basis.z
 	
-	var new_forward = -new_point.global_transform.basis.z
+	var new_forward := -new_point.global_transform.basis.z
 
-	var rotation_basis = Basis.looking_at(-parent_forward, Vector3.UP)
-	var new_basis = Basis.looking_at(new_forward, Vector3.UP)
-	var final_basis = rotation_basis * new_basis.inverse()
+	var rotation_basis := Basis.looking_at(-parent_forward, Vector3.UP)
+	var new_basis := Basis.looking_at(new_forward, Vector3.UP)
+	var final_basis := rotation_basis * new_basis.inverse()
 	
 	new_room.global_transform.basis = final_basis
 	
