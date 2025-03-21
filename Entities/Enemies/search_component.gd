@@ -28,7 +28,7 @@ func _search() -> Array[Vector3]:
 	
 	var points_array: Array[Vector3]
 	
-	if Global.findable_entities_regions_rids[enemy_rid]:
+	if Global.findable_entities_regions_rids.has(enemy_rid):
 		var enemy_region_rid := Global.findable_entities_regions_rids[enemy_rid]
 		
 		for _i in range(max_search_point):
