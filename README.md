@@ -20,6 +20,8 @@
 - Loot tables
 - Mini mapa lub mapa "fizyczna"
 - Nastawienie ras
+- Sensowne ustawienia generacji dungeona
+- Enviroment
 
 ## IN PROGRESS
 
