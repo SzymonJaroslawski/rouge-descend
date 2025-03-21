@@ -1,0 +1,122 @@
+[gd_scene load_steps=16 format=3 uid="uid://0fcd18aeotv7"]
+
+[ext_resource type="Script" uid="uid://h5cbwtqncr8b" path="res://Entities/Enemies/enemy.gd" id="1_4yx7f"]
+[ext_resource type="Script" uid="uid://dmnf0gan5a57e" path="res://SharedClasses/enemy_stats.gd" id="2_rrjk5"]
+[ext_resource type="Script" uid="uid://qn8jmjn8my8v" path="res://Entities/health_component.gd" id="3_ih2x4"]
+[ext_resource type="Script" uid="uid://cmiy2aaab20fn" path="res://Entities/velocity_queue.gd" id="4_rrjk5"]
+[ext_resource type="Script" uid="uid://b12bkd2cstprh" path="res://Entities/Enemies/player_detection_component.gd" id="4_unmje"]
+[ext_resource type="Script" uid="uid://bewu44lckulc2" path="res://Entities/Enemies/chase_component.gd" id="5_002w2"]
+[ext_resource type="Script" uid="uid://se46hjdv1cwh" path="res://addons/tattomoosa.vision_cone_3d/src/VisionCone3D.gd" id="5_ih2x4"]
+[ext_resource type="Script" uid="uid://vrxl6yrifvq3" path="res://Entities/hitbox_component.gd" id="6_45ars"]
+
+[sub_resource type="Resource" id="Resource_4yx7f"]
+script = ExtResource("2_rrjk5")
+health = 50.0
+speed = 6.5
+accel = 13.0
+metadata/_custom_type_script = "uid://dmnf0gan5a57e"
+
+[sub_resource type="SphereMesh" id="SphereMesh_48yn5"]
+radius = 0.1
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_48yn5"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.105882, 0.454902, 0.203922, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_48yn5"]
+material = SubResource("StandardMaterial3D_48yn5")
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qve3h"]
+height = 1.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ic7w5"]
+height = 1.0
+radius = 2.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5jcok"]
+radius = 0.6
+height = 1.9
+
+[node name="Zombie" type="CharacterBody3D" node_paths=PackedStringArray("health_component", "hitbox_component", "player_detection_component", "chase_component")]
+script = ExtResource("1_4yx7f")
+stats = SubResource("Resource_4yx7f")
+gravity_affected = true
+health_component = NodePath("HealthComponent")
+hitbox_component = NodePath("HitboxComponent")
+player_detection_component = NodePath("PlayerDetectionComponent")
+chase_component = NodePath("ChaseComponent")
+
+[node name="Eye1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.185691, 0.514763, -0.492182)
+mesh = SubResource("SphereMesh_48yn5")
+
+[node name="Eye2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.186, 0.515, -0.492)
+mesh = SubResource("SphereMesh_48yn5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_48yn5")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_qve3h")
+
+[node name="HealthComponent" type="Node3D" parent="."]
+script = ExtResource("3_ih2x4")
+metadata/_custom_type_script = "uid://qn8jmjn8my8v"
+
+[node name="PlayerDetectionComponent" type="Node3D" parent="." node_paths=PackedStringArray("detection_area", "detection_raycast")]
+script = ExtResource("4_unmje")
+detection_area = NodePath("VisionCone3D")
+detection_raycast = NodePath("DetectionRaycast")
+detection_raycast_minus_z = -8.0
+detection_timer_wait_time = 0.05
+metadata/_custom_type_script = "uid://b12bkd2cstprh"
+
+[node name="DetectionRaycast" type="RayCast3D" parent="PlayerDetectionComponent"]
+target_position = Vector3(0, 0, 0)
+
+[node name="VisionCone3D" type="Area3D" parent="PlayerDetectionComponent"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.428595, 0)
+script = ExtResource("5_ih2x4")
+range = 10.0
+angle = 70.0
+debug_draw = true
+metadata/_custom_type_script = "uid://se46hjdv1cwh"
+
+[node name="DetectionArea" type="Area3D" parent="PlayerDetectionComponent"]
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerDetectionComponent/DetectionArea"]
+shape = SubResource("CylinderShape3D_ic7w5")
+debug_color = Color(0, 0.6, 0.701961, 1)
+
+[node name="ChaseComponent" type="NavigationAgent3D" parent="."]
+debug_enabled = true
+script = ExtResource("5_002w2")
+p_desired_distance = 1.0
+t_desired_distance = 1.0
+velocity_tracking_infulance = 1.5
+velocity_queue_max_size = 40
+velocity_queue_max_age_ms = 50.0
+metadata/_custom_type_script = "uid://bewu44lckulc2"
+
+[node name="VelocityQueue" type="Node" parent="ChaseComponent" node_paths=PackedStringArray("timer")]
+script = ExtResource("4_rrjk5")
+timer = NodePath("../Timer")
+timer_wait_time = 0.01
+max_queue_size = 10
+max_age_ms = 250.0
+metadata/_custom_type_script = "uid://cmiy2aaab20fn"
+
+[node name="Timer" type="Timer" parent="ChaseComponent"]
+process_callback = 0
+
+[node name="HitboxComponent" type="Area3D" parent="."]
+visible = false
+script = ExtResource("6_45ars")
+metadata/_custom_type_script = "uid://vrxl6yrifvq3"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape3D_5jcok")
