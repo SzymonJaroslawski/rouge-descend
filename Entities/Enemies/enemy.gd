@@ -17,9 +17,9 @@ var new_position: Vector3 = Vector3.ZERO
 var should_navigate: bool = false
 
 func _ready() -> void:
-	_setup_components()
+	_setup()
 
-func _setup_components() -> void:
+func _setup() -> void:
 	health_component.health = stats.health
 	player_detection_component.enemy_detected.connect(chase_component._on_enemy_detected)
 	player_detection_component.enemy_lost.connect(chase_component._on_enemy_lost)
@@ -43,8 +43,8 @@ func _navigation_finished() -> void:
 
 func _physics_process(delta: float) -> void:
 	if gravity_affected:
-		if !is_on_floor():
-			velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
+			if !is_on_floor():
+				velocity.y -= ProjectSettings.get_setting("physics/3d/default_gravity") * delta
 	
 	chase_component.global_position = global_position
 	
@@ -53,6 +53,7 @@ func _physics_process(delta: float) -> void:
 	global_rotation.y = _new_rot
 	
 	if !should_navigate:
+		move_and_slide()
 		return
 	
 	velocity.x = move_toward(velocity.x, new_position.x * stats.speed, delta * stats.accel)
