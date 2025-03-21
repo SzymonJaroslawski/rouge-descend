@@ -2,6 +2,7 @@ extends Node
 
 @export var rooms: int
 @export var player_scene: PackedScene
+@export var spawn_player: bool = true
 
 @onready var dungeon_generator: DungeonGenerator = $DungeonGenerator
 @onready var physics_ticks: int = ProjectSettings.get_setting("physics/common/physics_ticks_per_second")
@@ -17,7 +18,8 @@ func _setup() -> void:
 	await dungeon_generator.generate()
 	Global.generation_finished.emit()
 	Engine.physics_ticks_per_second = physics_ticks
-	#_spawn_player()
+	if spawn_player:
+		_spawn_player()
 
 func _spawn_player() -> void:
 	camera_3d.queue_free()
