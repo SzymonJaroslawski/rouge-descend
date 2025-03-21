@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://cuu4hutlbedn8"]
+[gd_scene load_steps=7 format=3 uid="uid://cuu4hutlbedn8"]
 
 [ext_resource type="Script" uid="uid://cvg6xg7ijocbi" path="res://Entities/Player/player.gd" id="1_lu8i8"]
 [ext_resource type="Script" uid="uid://qn8jmjn8my8v" path="res://Entities/health_component.gd" id="1_mv1ah"]
 [ext_resource type="Script" uid="uid://vrxl6yrifvq3" path="res://Entities/hitbox_component.gd" id="2_3uyv8"]
+[ext_resource type="Script" uid="uid://clv06p52s4is" path="res://Entities/Player/findable_component.gd" id="4_tekja"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3uyv8"]
 height = 1.8
@@ -27,6 +28,10 @@ shape = SubResource("CapsuleShape3D_3uyv8")
 script = ExtResource("1_mv1ah")
 health = 50.0
 metadata/_custom_type_script = "uid://qn8jmjn8my8v"
+
+[node name="FindableComponent" type="Node3D" parent="."]
+script = ExtResource("4_tekja")
+metadata/_custom_type_script = "uid://clv06p52s4is"
 
 [node name="HitboxComponent" type="Area3D" parent="."]
 script = ExtResource("2_3uyv8")

@@ -13,13 +13,15 @@ func get_avg() -> Vector3:
 	if queue.is_empty():
 		return Vector3.ZERO
 	
-	if ceil(queue.size() * 2) < floor(max_queue_size / 2):
+	if floor(queue.size() * 2) < floor(max_queue_size / 2):
 		return Vector3.ZERO
 	
 	var sum := Vector3.ZERO
+	var i := 0
 	for sample in queue:
 		if sample:
-			sum += sample["velocity"]
+			sum += sample["velocity"] * (i * 0.2)
+			i = i + 1
 	
 	return sum / queue.size()
 

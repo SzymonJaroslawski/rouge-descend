@@ -1,3 +1,6 @@
 extends Node
 
-signal generation_finished()
+signal generation_finished
+
+## KEY: Entity RID, VAL: NavigationRegion RID
+var findable_entities_regions_rids: Dictionary[RID, RID]

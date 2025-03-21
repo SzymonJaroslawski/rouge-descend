@@ -9,6 +9,7 @@ class_name Enemy extends CharacterBody3D
 @export var hitbox_component: HitboxComponent
 @export var player_detection_component: PlayerDetectionComponent
 @export var chase_component: ChaseComponent
+@export var search_component: SearchComponent
 #endregion
 
 var new_position: Vector3 = Vector3.ZERO
@@ -16,15 +17,26 @@ var new_position: Vector3 = Vector3.ZERO
 var should_navigate: bool = false
 
 func _ready() -> void:
+	_setup_components()
+
+func _setup_components() -> void:
 	health_component.health = stats.health
 	player_detection_component.enemy_detected.connect(chase_component._on_enemy_detected)
 	player_detection_component.enemy_lost.connect(chase_component._on_enemy_lost)
+	player_detection_component.enemy_detected.connect(search_component._on_enemy_detected)
+	player_detection_component.enemy_lost.connect(search_component._on_enemy_lost)
 	chase_component.navigate.connect(_on_got_target_pos)
 	chase_component.navigation_finished.connect(_navigation_finished)
+	chase_component.velocity_computed.connect(_on_safe_velocity)
+	search_component.start_search.connect(chase_component._on_start_search)
 
 func _on_got_target_pos(_new_position: Vector3) -> void:
 	should_navigate = true
 	new_position = _new_position
+
+func _on_safe_velocity(safe_velocity: Vector3) -> void:
+	if should_navigate:
+		velocity = safe_velocity
 
 func _navigation_finished() -> void:
 	should_navigate = false
@@ -45,5 +57,7 @@ func _physics_process(delta: float) -> void:
 	
 	velocity.x = move_toward(velocity.x, new_position.x * stats.speed, delta * stats.accel)
 	velocity.z = move_toward(velocity.z, new_position.z * stats.speed, delta * stats.accel)
+	
+	chase_component.parent_velocity = velocity
 	
 	move_and_slide()
