@@ -8,7 +8,6 @@
 - Bronie ( wyświetlanie broni w pierwszej osobie, hitboxy )
 - Ataki wrogów
 - Statystyki gracza i wrogów ( wspólne parametry )
-- Protorypowa gemoetria pokoji
 - Podstawowe UI
 - Drzwi w pokojach
 
@@ -22,7 +21,9 @@
 - Nastawienie ras
 - Sensowne ustawienia generacji dungeona
 - Enviroment
+- Więcej scen testowych 
 
 ## IN PROGRESS
+- Prototypowa gemoetria pokoji
 
 ## DONE
